@@ -18,8 +18,8 @@ var serveStdioCmd = &cobra.Command{
 	Short: "Starts the MCP server over Standard IO",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		dir := viper.GetString("dir")
-		ollamaHost := viper.GetString("ollama-host")
-		ollamaModel := viper.GetString("ollama-model")
+		ollamaHost := viper.GetString("ollama.host")
+		ollamaModel := viper.GetString("ollama.model")
 
 		slog.Debug("starting serve stdio", 
 			"dir", dir, 
@@ -36,8 +36,8 @@ var serveHttpCmd = &cobra.Command{
 	Short: "Starts the MCP server over HTTP/SSE",
 	RunE: func(cmd *cobra.Command, args []string) error {
 		dir := viper.GetString("dir")
-		ollamaHost := viper.GetString("ollama-host")
-		ollamaModel := viper.GetString("ollama-model")
+		ollamaHost := viper.GetString("ollama.host")
+		ollamaModel := viper.GetString("ollama.model")
 		httpAddr := viper.GetString("http.address")
 
 		slog.Debug("starting serve http", 
@@ -57,8 +57,8 @@ func init() {
 	serveCmd.AddCommand(serveHttpCmd)
 
 	serveCmd.PersistentFlags().String("dir", ".", "Directory containing markdown files to index")
-	serveCmd.PersistentFlags().String("ollama-host", "http://localhost:11434", "Ollama API endpoint")
-	serveCmd.PersistentFlags().String("ollama-model", "mxbai-embed-large", "Ollama embedding model to use")
+	serveCmd.PersistentFlags().String("ollama.host", "http://localhost:11434", "Ollama API endpoint")
+	serveCmd.PersistentFlags().String("ollama.model", "mxbai-embed-large", "Ollama embedding model to use")
 	
 	serveHttpCmd.Flags().String("http.address", ":8080", "Network address to bind the HTTP server to")
 

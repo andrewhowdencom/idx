@@ -19,8 +19,8 @@ Execute the `http` subcommand under the generic `serve` branch:
 
 * `--dir`: The root directory pointing to the `.md` resources you intend to parse (default: `.`)
 * `--http.address`: The network binding address for the HTTP listener (default: `:8080`).
-* `--ollama-host`: Your active Ollama service (default: `http://localhost:11434`).
-* `--pollama-model`: Target embedding generation model.
+* `--ollama.host`: Your active Ollama service (default: `http://localhost:11434`).
+* `--ollama.model`: Target embedding generation model.
 
 ## Connecting an MCP Client
 

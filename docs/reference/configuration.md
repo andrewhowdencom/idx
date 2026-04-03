@@ -28,7 +28,7 @@ Dots (`.`) and hyphens (`-`) in flag names are converted to underscores (`_`) in
 | CLI Flag | Environment Variable | 
 | :--- | :--- | 
 | `--dir` | `IDX_DIR` |
-| `--ollama-host` | `IDX_OLLAMA_HOST` |
-| `--ollama-model` | `IDX_OLLAMA_MODEL` |
+| `--ollama.host` | `IDX_OLLAMA_HOST` |
+| `--ollama.model` | `IDX_OLLAMA_MODEL` |
 | `--http.address` | `IDX_HTTP_ADDRESS` |
 | `--log-level` | `IDX_LOG_LEVEL` |
