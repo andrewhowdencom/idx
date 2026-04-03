@@ -23,6 +23,9 @@ Comprehensive guides on utilizing `idx` are available in our documentation porta
 * [Serving MCP over Standard IO (stdio)](docs/how-to/serve-mcp-over-stdio.md)
 * [Serving MCP over HTTP (SSE)](docs/how-to/serve-mcp-over-http.md)
 
+### Reference
+* [Configuration](docs/reference/configuration.md)
+
 ## Developer Architecture
 Please refer to the following root-level documents mapping out our component guidelines:
 * Check out `Taskfile.yml` for linting, testing, and generation rules.

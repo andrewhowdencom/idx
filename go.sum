@@ -1,3 +1,5 @@
+github.com/adrg/xdg v0.5.3 h1:xRnxJXne7+oWDatRhR1JLnvuccuIeCoBu2rtuLqQB78=
+github.com/adrg/xdg v0.5.3/go.mod h1:nlTsY+NNiCBGCK2tpm09vRqfVzrc2fLmXGpBLF0zlTQ=
 github.com/andrewhowdencom/stdlib v0.0.0-20260318094353-b5e9e0a3127a h1:26LvGFzvs0xghffaOkrZbkbyB5OYyyrqan018bGvDfk=
 github.com/andrewhowdencom/stdlib v0.0.0-20260318094353-b5e9e0a3127a/go.mod h1:p57zTv4CBlWB535+ItxJrzDQuCU2R5e160egGOk+aLw=
 github.com/cespare/xxhash/v2 v2.3.0 h1:UL815xU9SqsFlibzuggzjXhog7bL6oX9BbNZnL2UFvs=
