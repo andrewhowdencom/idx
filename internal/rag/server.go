@@ -33,6 +33,11 @@ func InitMCP(ctx context.Context, dir, ollamaHost, ollamaModel string) (*server.
 	slog.Info("initializing embedded vector database")
 	db := chromem.NewDB()
 	
+	// chromem-go expects the trailing /api for standard Ollama deployments
+	if ollamaHost != "" && !strings.HasSuffix(ollamaHost, "/api") && !strings.HasSuffix(ollamaHost, "/api/") {
+		ollamaHost = strings.TrimRight(ollamaHost, "/") + "/api"
+	}
+	
 	embedFunc := chromem.NewEmbeddingFuncOllama(ollamaModel, ollamaHost)
 	collection, err := db.CreateCollection("knowledge_base", nil, embedFunc)
 	if err != nil {
