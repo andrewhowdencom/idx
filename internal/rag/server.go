@@ -2,6 +2,7 @@ package rag
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"log/slog"
 	"net/http"
@@ -18,6 +19,37 @@ import (
 	"go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
 	"go.opentelemetry.io/otel/sdk/trace"
 )
+
+type ollamaTagsResponse struct {
+	Models []struct {
+		Name string `json:"name"`
+	} `json:"models"`
+}
+
+func checkOllamaModelExists(host, model string) error {
+	resp, err := http.Get(host + "/tags")
+	if err != nil {
+		return fmt.Errorf("failed to connect to Ollama at %s: %w", host, err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return fmt.Errorf("ollama API returned status %d when checking tags", resp.StatusCode)
+	}
+
+	var tags ollamaTagsResponse
+	if err := json.NewDecoder(resp.Body).Decode(&tags); err != nil {
+		return fmt.Errorf("failed to parse ollama tags response: %w", err)
+	}
+
+	for _, m := range tags.Models {
+		if m.Name == model || m.Name == model+":latest" {
+			return nil
+		}
+	}
+
+	return fmt.Errorf("model %q not found. Please run 'ollama pull %s' or specify an available model", model, model)
+}
 
 // InitMCP encapsulates parsing and index logic shared across protocol providers
 func InitMCP(ctx context.Context, dir, ollamaHost, ollamaModel string) (*server.MCPServer, error) {
@@ -36,6 +68,10 @@ func InitMCP(ctx context.Context, dir, ollamaHost, ollamaModel string) (*server.
 	// chromem-go expects the trailing /api for standard Ollama deployments
 	if ollamaHost != "" && !strings.HasSuffix(ollamaHost, "/api") && !strings.HasSuffix(ollamaHost, "/api/") {
 		ollamaHost = strings.TrimRight(ollamaHost, "/") + "/api"
+	}
+	
+	if err := checkOllamaModelExists(ollamaHost, ollamaModel); err != nil {
+		return nil, fmt.Errorf("ollama preflight check failed: %w", err)
 	}
 	
 	embedFunc := chromem.NewEmbeddingFuncOllama(ollamaModel, ollamaHost)
