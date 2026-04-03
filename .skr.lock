@@ -1,0 +1,11 @@
+skills:
+    file://../skills/skills/architecture: sha256:fd47bdde63e3ea1aa36486beb461799b12e7e91a9db898d212f1b55f90601bc3
+    file://../skills/skills/cli: sha256:f827d4edd132a7ffbdade9c25a2ea57b5751aa461c5c2b41912daa560b7c5ed1
+    file://../skills/skills/configuration: sha256:1ab637e5aa67d606ddfa25886988048ddc00a1ce2ebe24d62b6514cedf5b7c01
+    file://../skills/skills/dependency_injection: sha256:e47a01c0ceb8e1f8e73736809847ccf9c1b3e5854b042b074399aad447e32abb
+    file://../skills/skills/documentation: sha256:55bfee3f55336d3df6626f0d57535fb578915f4974f50beac452990eaf5dce67
+    file://../skills/skills/git: sha256:0c8c3813d7e1758a7739d3db0dfdec112e812d9a7e18948fe57212dfbeccf1a0
+    file://../skills/skills/go: sha256:cd219a21758529879c50d0d563115b63de1f6b6f8106814c89556cd07950f2b2
+    file://../skills/skills/instrumentation: sha256:0b26ccba56262fdc2d1aca75c17f487698ad4a9f6455d31dfe0df5cc12c50eb9
+    file://../skills/skills/rpc: sha256:26d77b62d92ecad07353a3036e52e7c9de6a6f7076b5df1df0bc8d78b55ff2db
+    file://../skills/skills/taskfile: sha256:5ada219a620a0e4bbd829adafac249da08b54305ff2b07c62b7cf320544f7e57
