@@ -58,7 +58,7 @@ func init() {
 
 	serveCmd.PersistentFlags().String("dir", ".", "Directory containing markdown files to index")
 	serveCmd.PersistentFlags().String("ollama.host", "http://localhost:11434", "Ollama API endpoint")
-	serveCmd.PersistentFlags().String("ollama.model", "mxbai-embed-large", "Ollama embedding model to use")
+	serveCmd.PersistentFlags().String("ollama.model", "embeddinggemma", "Ollama embedding model to use")
 	
 	serveHttpCmd.Flags().String("http.address", ":8080", "Network address to bind the HTTP server to")
 

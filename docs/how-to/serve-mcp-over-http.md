@@ -5,7 +5,7 @@
 ## Prerequisites
 
 1. Ensure you have built the application (`./bin/idx`).
-2. Have a working Ollama endpoint accessible (e.g. `http://localhost:11434`) containing your target embedding model (`mxbai-embed-large` by default).
+2. Have a working Ollama endpoint accessible (e.g. `http://localhost:11434`) containing your target embedding model (`embeddinggemma` by default).
 
 ## Starting the Server
 
