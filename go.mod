@@ -4,7 +4,7 @@ go 1.25.5
 
 require (
 	github.com/adrg/xdg v0.5.3
-	github.com/andrewhowdencom/stdlib v0.0.0-20260318094353-b5e9e0a3127a
+	github.com/andrewhowdencom/stdlib v0.0.0-20260406143630-5f44901f9829
 	github.com/mark3labs/mcp-go v0.46.0
 	github.com/philippgille/chromem-go v0.7.0
 	github.com/spf13/cobra v1.10.2

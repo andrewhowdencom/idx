@@ -30,3 +30,60 @@ When your server is running, the protocol exposes the endpoints required to inte
 * **Message Binding URL**: `http://localhost:8080/message`
 
 Refer to your respective LLM tool client documentation (Claude Desktop, Cursor, generic MCP JS/Python clients) on establishing an active SSE hook using your configured port mapped against `/sse`.
+
+## Interacting via curl
+
+You can also interact with the MCP server directly using `curl` to send JSON-RPC requests.
+
+Because MCP over HTTP relies on Server-Sent Events (SSE) and session identifiers, this requires two terminal windows.
+
+**Terminal 1: Start the SSE Connection**
+
+First, open a connection to the `/sse` endpoint. This will stream events from the server to your client. Use `-N` to prevent curl from buffering the output.
+
+```bash
+curl -N http://localhost:8080/sse
+```
+
+When you connect, the server will immediately emit an `endpoint` event containing a URL with your unique `sessionId`.
+
+```text
+event: endpoint
+data: /message?sessionId=12345678-1234-1234-1234-123456789abc
+```
+
+**Terminal 2: Send JSON-RPC Messages**
+
+Using the URL provided in the `endpoint` event from Terminal 1, you can now `POST` JSON-RPC payloads to interact with the server.
+
+For example, to list available tools:
+
+```bash
+curl -X POST "http://localhost:8080/message?sessionId=YOUR_SESSION_ID" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 1,
+    "method": "tools/list"
+  }'
+```
+
+To call the `search_knowledge_base` tool:
+
+```bash
+curl -X POST "http://localhost:8080/message?sessionId=YOUR_SESSION_ID" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": 2,
+    "method": "tools/call",
+    "params": {
+      "name": "search_knowledge_base",
+      "arguments": {
+        "query": "your search term here"
+      }
+    }
+  }'
+```
+
+You will see the response to your POST request emitted as a `message` event in **Terminal 1**.
