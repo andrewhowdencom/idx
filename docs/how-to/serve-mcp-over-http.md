@@ -24,7 +24,17 @@ Execute the `http` subcommand under the generic `serve` branch:
 
 ## Connecting an MCP Client
 
-When your server is running, the protocol exposes the endpoints required to interface with standard MCP clients:
+Depending on your MCP client's supported transport, you have two endpoints available:
+
+### Streamable HTTP (Recommended)
+
+If your client supports the modern Streamable HTTP transport type (such as the default in `mark3labs/mcp-go`), use the following endpoint:
+
+* **Endpoint URL**: `http://localhost:8080/mcp`
+
+### Server-Sent Events (SSE)
+
+For older MCP clients or those strictly requiring the SSE transport standard, use the paired SSE endpoints:
 
 * **SSE Connection URL**: `http://localhost:8080/sse`
 * **Message Binding URL**: `http://localhost:8080/message`

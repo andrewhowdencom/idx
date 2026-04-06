@@ -156,10 +156,14 @@ func ServeHTTPConfig(ctx context.Context, dir, ollamaHost, ollamaModel, httpAddr
 	// Wrap inside SSE implementation
 	sseServer := server.NewSSEServer(mcpServer)
 
+	// Wrap inside Streamable HTTP implementation
+	streamableServer := server.NewStreamableHTTPServer(mcpServer, server.WithEndpointPath("/mcp"))
+
 	// Combine endpoints using Go's standard multiplexer
 	mux := http.NewServeMux()
 	mux.Handle("/sse", sseServer.SSEHandler())
 	mux.Handle("/message", sseServer.MessageHandler())
+	mux.Handle("/mcp", streamableServer)
 
 	// Implement with custom stdlib wrapper allowing proper config and OTEL traces
 	slog.Info("starting stdlib http sse server", "addr", httpAddr)
