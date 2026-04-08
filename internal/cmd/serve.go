@@ -3,7 +3,7 @@ package cmd
 import (
 	"log/slog"
 
-	"github.com/andrewhowdencom/idx/internal/rag"
+	"github.com/andrewhowdencom/idx/internal/rag/di"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 )
@@ -17,17 +17,35 @@ var serveStdioCmd = &cobra.Command{
 	Use:   "stdio",
 	Short: "Starts the MCP server over Standard IO",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		dir := viper.GetString("dir")
+		dirs := viper.GetStringMapString("dir")
+		defaultIndex := viper.GetString("default-index")
 		ollamaHost := viper.GetString("ollama.host")
 		ollamaModel := viper.GetString("ollama.model")
 
 		slog.Debug("starting serve stdio", 
-			"dir", dir, 
+			"dirs", dirs,
+			"defaultIndex", defaultIndex,
 			"ollamaHost", ollamaHost, 
 			"ollamaModel", ollamaModel,
 		)
 
-		return rag.ServeStdio(cmd.Context(), dir, ollamaHost, ollamaModel)
+		app, err := di.InitializeServer(cmd.Context(), di.AppConfig{
+			Dirs:         dirs,
+			DefaultIndex: defaultIndex,
+			OllamaHost:   ollamaHost,
+			OllamaModel:  ollamaModel,
+			MaxChunkSize: 1000,
+			Concurrency:  5,
+		})
+		if err != nil {
+			return err
+		}
+
+		if err := app.Knowledge.InitIndex(cmd.Context(), dirs); err != nil {
+			return err
+		}
+
+		return app.Adapter.ServeStdio()
 	},
 }
 
@@ -35,19 +53,37 @@ var serveHttpCmd = &cobra.Command{
 	Use:   "http",
 	Short: "Starts the MCP server over HTTP/SSE",
 	RunE: func(cmd *cobra.Command, args []string) error {
-		dir := viper.GetString("dir")
+		dirs := viper.GetStringMapString("dir")
+		defaultIndex := viper.GetString("default-index")
 		ollamaHost := viper.GetString("ollama.host")
 		ollamaModel := viper.GetString("ollama.model")
 		httpAddr := viper.GetString("http.address")
 
 		slog.Debug("starting serve http", 
-			"dir", dir, 
+			"dirs", dirs,
+			"defaultIndex", defaultIndex,
 			"ollamaHost", ollamaHost, 
 			"ollamaModel", ollamaModel,
 			"httpAddr", httpAddr,
 		)
 
-		return rag.ServeHTTPConfig(cmd.Context(), dir, ollamaHost, ollamaModel, httpAddr)
+		app, err := di.InitializeServer(cmd.Context(), di.AppConfig{
+			Dirs:         dirs,
+			DefaultIndex: defaultIndex,
+			OllamaHost:   ollamaHost,
+			OllamaModel:  ollamaModel,
+			MaxChunkSize: 1000,
+			Concurrency:  5,
+		})
+		if err != nil {
+			return err
+		}
+
+		if err := app.Knowledge.InitIndex(cmd.Context(), dirs); err != nil {
+			return err
+		}
+
+		return app.Adapter.ServeHTTPConfig(cmd.Context(), httpAddr)
 	},
 }
 
@@ -56,7 +92,8 @@ func init() {
 	serveCmd.AddCommand(serveStdioCmd)
 	serveCmd.AddCommand(serveHttpCmd)
 
-	serveCmd.PersistentFlags().String("dir", ".", "Directory containing markdown files to index")
+	serveCmd.PersistentFlags().StringToString("dir", map[string]string{"default": "."}, "Directories containing markdown files to index (e.g., --dir name=path)")
+	serveCmd.PersistentFlags().String("default-index", "default", "The name of the default index to query when none is specified")
 	serveCmd.PersistentFlags().String("ollama.host", "http://localhost:11434", "Ollama API endpoint")
 	serveCmd.PersistentFlags().String("ollama.model", "embeddinggemma", "Ollama embedding model to use")
 	
