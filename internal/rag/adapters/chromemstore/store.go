@@ -34,6 +34,7 @@ type Config struct {
 	OllamaHost  string
 	OllamaModel string
 	Concurrency int
+	DBPath      string
 }
 
 // New creates a new VectorStore backed by chromem-go and Ollama.
@@ -47,7 +48,19 @@ func New(cfg Config) (ports.VectorStore, error) {
 		return nil, fmt.Errorf("ollama preflight check failed: %w", err)
 	}
 
-	db := chromem.NewDB()
+	var db *chromem.DB
+	var err error
+	if cfg.DBPath != "" {
+		slog.Debug("initializing persistent vector database", "path", cfg.DBPath)
+		db, err = chromem.NewPersistentDB(cfg.DBPath, true)
+		if err != nil {
+			return nil, fmt.Errorf("failed to initialize persistent chromem db: %w", err)
+		}
+	} else {
+		slog.Debug("initializing in-memory vector database")
+		db = chromem.NewDB()
+	}
+
 	embedFunc := chromem.NewEmbeddingFuncOllama(cfg.OllamaModel, cfg.OllamaHost)
 
 	concurrency := cfg.Concurrency

@@ -21,6 +21,7 @@ type AppConfig struct {
 	OllamaModel  string
 	MaxChunkSize int
 	Concurrency  int
+	DBPath       string
 }
 
 // Map configuration
@@ -29,6 +30,7 @@ func provideChromemConfig(cfg AppConfig) chromemstore.Config {
 		OllamaHost:  cfg.OllamaHost,
 		OllamaModel: cfg.OllamaModel,
 		Concurrency: cfg.Concurrency,
+		DBPath:      cfg.DBPath,
 	}
 }
 

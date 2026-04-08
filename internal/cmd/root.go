@@ -13,8 +13,7 @@ import (
 )
 
 var (
-	cfgFile  string
-	logLevel string
+	cfgFile string
 )
 
 // rootCmd represents the base command when called without any subcommands
@@ -33,7 +32,7 @@ func init() {
 	cobra.OnInitialize(initConfig, initLogger)
 
 	rootCmd.PersistentFlags().StringVar(&cfgFile, "config", "", "config file (default is $XDG_CONFIG_HOME/idx/config.yaml)")
-	rootCmd.PersistentFlags().StringVar(&logLevel, "log-level", "info", "set log level (debug, info, warn, error)")
+	rootCmd.PersistentFlags().String("log.level", "info", "set log level (debug, info, warn, error)")
 }
 
 // initConfig reads in config file and ENV variables if set.
@@ -53,14 +52,19 @@ func initConfig() {
 	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "_", "-", "_"))
 	viper.AutomaticEnv()
 
+	if err := viper.BindPFlags(rootCmd.PersistentFlags()); err != nil {
+		panic(err)
+	}
+
 	if err := viper.ReadInConfig(); err == nil {
 		slog.Debug("using config file", "file", viper.ConfigFileUsed())
 	}
 }
 
-// initLogger configures slog based on the --log-level flag
+// initLogger configures slog based on the --log.level flag
 func initLogger() {
 	var level slog.Level
+	logLevel := viper.GetString("log.level")
 	switch strings.ToLower(logLevel) {
 	case "debug":
 		level = slog.LevelDebug
